@@ -1,0 +1,116 @@
+
+:root {
+  --primary-color: rgb(1, 71, 1);
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  outline: none;
+  border: none;
+  box-sizing: border-box;
+  transition: 0.3s all linear;
+  font-size: 24px;
+}
+
+body {
+  overflow: hidden;
+  background-color: rgb(231, 247, 219);
+}
+
+.title {
+  margin-bottom: 14px;
+  font-size: 28px;
+  color: var(--primary-color);
+}
+
+#main {
+  width: 500px;
+  margin: 0 auto;
+  padding: 100px 20px;
+}
+
+.todo-input {
+  padding: 12px;
+  background: none;
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background: none;
+  background-color: darkolivegreen;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  box-shadow: 2px 5px 16px var(--primary-color);
+}
+
+.todo {
+  min-width: 200px;
+  max-width: 316px;
+  min-height: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+  padding: 14px 8px;
+  padding-bottom: 0;
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.done,
+.delete {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-position: center;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.done {
+  margin-right: 14px;
+  background-image: url("./assest/done.png");
+}
+
+.delete {
+  background-image: url("./assest/delete.png");
+}
+
+.done:hover,
+.delete:hover {
+  opacity: 0.6;
+}
+
+.completed {
+  text-decoration: line-through;
+}
+
+.fall {
+  transform: translateY(7rem) rotate(30deg);
+}
+@media (max-width: 480px) {
+  body {
+    font-size: 18px;
+  }
+  #main {
+    padding: 100px 6px;
+    width: 90%;
+  }
+  .todo-input {
+    width: 98%;
+    padding: 6px;
+  }
+  .title {
+    font-size: 24px;
+  }
+  .todo {
+    max-width: 98%;
+  }
+}

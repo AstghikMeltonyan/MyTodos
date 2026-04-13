@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Список дел</title>
+  <style>
+    :root {
+      --primary-color: rgb(1, 71, 1);
+    }
+
+    * {
+      padding: 0;
+      margin: 0;
+      outline: none;
+      border: none;
+      box-sizing: border-box;
+      transition: 0.3s all linear;
+      font-size: 24px;
+    }
+
+    body {
+      overflow: hidden;
+      background-color: rgb(231, 247, 219);
+    }
+
+    .title {
+      margin-bottom: 14px;
+      font-size: 28px;
+      color: var(--primary-color);
+    }
+
+    #main {
+      width: 500px;
+      margin: 0 auto;
+      padding: 100px 20px;
+    }
+
+    .todo-input {
+      padding: 12px;
+      background: none;
+      color: var(--primary-color);
+      border-bottom: 2px solid var(--primary-color);
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      background: none;
+      background-color: darkolivegreen;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      box-shadow: 2px 5px 16px var(--primary-color);
+    }
+
+    .todo {
+      min-width: 200px;
+      max-width: 316px;
+      min-height: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: nowrap;
+      padding: 14px 8px;
+      padding-bottom: 0;
+      border-bottom: 2px solid var(--primary-color);
+    }
+
+    .done,
+    .delete {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      background-position: center;
+      background-size: cover;
+      cursor: pointer;
+    }
+
+    .done {
+      margin-right: 14px;
+      background-image: url("./assest/done.png");
+    }
+
+    .delete {
+      background-image: url("./assest/delete.png");
+    }
+
+    .done:hover,
+    .delete:hover {
+      opacity: 0.6;
+    }
+
+    .completed {
+      text-decoration: line-through;
+    }
+
+    .fall {
+      transform: translateY(7rem) rotate(30deg);
+    }
+    @media (max-width: 480px) {
+      body {
+        font-size: 18px;
+      }
+      #main {
+        padding: 100px 6px;
+        width: 90%;
+      }
+      .todo-input {
+        width: 98%;
+        padding: 6px;
+      }
+      .title {
+        font-size: 24px;
+      }
+      .todo {
+        max-width: 98%;
+      }
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      let todos = []
+      createTodoApp(document.getElementById('main'), 'Мои дела', 'key', todos)
+    });
+  </script>
+</head>
+
+<body>
+  <div id="main" class="container"></div>
+  <script>
+    (function () {
+      let listArray = [];
+      let keyList = '';
+
+      function createTodoTitle(title) {
+        let appTitle = document.createElement('h2');
+        appTitle.classList.add('title');
+        appTitle.innerHTML = title;
+        return appTitle;
+      }
+
+      function createTodoForm() {
+        let form = document.createElement('form');
+        let input = document.createElement('input');
+        let buttonWrapper = document.createElement('div');
+        // let button = document.createElement('button');
+
+        // button.textContent = '+';
+        input.placeholder = 'Добавить дело';
+
+        input.classList.add('todo-input');
+        // button.classList.add('btn');
+
+        // button.disabled = true;
+        // input.addEventListener('input', function () {
+        //   button.disabled = false;
+        // });
+        // form.append(input, button);
+        form.append(input);
+        form.append(buttonWrapper);
+        return {
+          form,
+          input,
+          // button
+        }
+      }
+
+      function createTodoList() {
+        let list = document.createElement('ul');
+        return list;
+      }
+
+      function createTodoItem(obj) {
+        let item = document.createElement('li');
+        let buttonGroup = document.createElement('div');
+        let doneButton = document.createElement('button');
+        let deleteButton = document.createElement('button');
+
+        item.classList.add('todo');
+        doneButton.classList.add('done');
+        deleteButton.classList.add('delete');
+
+
+        item.textContent = obj.name;
+        item.id = obj.id;
+
+        if (obj.done) item.classList.add('completed');
+
+        doneButton.addEventListener('click', function () {
+          item.classList.toggle('completed');
+
+          for (const item of listArray) {
+            if (item.id === obj.id) {
+              item.done = !item.done;
+            }
+          }
+          saveInLocaleStorage(keyList, listArray);
+        });
+
+        deleteButton.addEventListener('click', function () {
+          item.remove()
+          for (let i = 0; i < listArray.length; i++) {
+            if (listArray[i].id == obj.id) {
+              listArray.splice(i, 1)
+            }
+          }
+          saveInLocaleStorage(keyList, listArray);
+        });
+
+        buttonGroup.append(doneButton);
+        buttonGroup.append(deleteButton);
+        item.append(buttonGroup);
+
+        return {
+          item,
+          doneButton,
+          deleteButton
+        }
+      }
+
+      function getNewID(arr) {
+        let max = 0;
+        for (let item of arr) {
+          if (item.id > max) max = item.id;
+        }
+        return max + 1;
+      }
+
+      function saveInLocaleStorage(key, arr) {
+        localStorage.setItem(key, JSON.stringify(arr))
+      }
+
+      function createTodoApp(container, title, key, todosArr) {
+        let todoTitle = createTodoTitle(title);
+        let todoForm = createTodoForm();
+        let todoList = createTodoList();
+
+        container.append(todoTitle);
+        container.append(todoForm.form);
+        container.append(todoList);
+
+        keyList = key;
+        let localData = localStorage.getItem(keyList);
+
+        if (localData !== null && localData !== '') {
+          listArray = JSON.parse(localData)
+        } else {
+          listArray = todosArr;
+          saveInLocaleStorage(keyList, listArray)
+        }
+
+        for (const item of listArray) {
+          let todoItem = createTodoItem(item)
+          todoList.append(todoItem.item);
+        }
+
+        todoForm.form.addEventListener('submit', function (e) {
+          e.preventDefault();
+
+          if (!todoForm.input.value.trim()) {
+            return;
+          }
+
+          let newTodo = {
+            id: getNewID(listArray),
+            name: todoForm.input.value,
+            done: false
+          }
+
+          let todoItem = createTodoItem(newTodo);
+
+          listArray.push(newTodo);
+
+          todoList.append(todoItem.item);
+
+          saveInLocaleStorage(keyList, listArray);
+
+          todoForm.input.value = '';
+          todoForm.button.disabled = true;
+        })
+      }
+      window.createTodoApp = createTodoApp;
+    })()
+
+  </script>
+</body>
+
+</html>

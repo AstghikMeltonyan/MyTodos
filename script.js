@@ -14,6 +14,7 @@
     let input = document.createElement('input');
     input.placeholder = 'Добавить дело';
     input.type = "text";
+
     input.classList.add('todo-input');
     form.append(input);
     return {
@@ -111,9 +112,8 @@
       todoList.append(todoItem.item);
     }
 
-    todoForm.input.addEventListener('keydown', function (e) {
-      if(e.key === 'Enter') {
-   e.preventDefault();
+    todoForm.form.addEventListener('submit', function (e) {
+      e.preventDefault();
 
       if (!todoForm.input.value.trim()) {
         return;
@@ -134,8 +134,13 @@
       saveInLocaleStorage(keyList, listArray);
 
       todoForm.input.value = '';
+      todoForm.button.disabled = true;
+    })
+    todoForm.input.addEventListener('keydown',  function(e) {
+      if(e.key === 'Enter') {
+        e.preventDefault();
+        todoForm.form.requestSubmit();
       }
-  
     })
   }
   window.createTodoApp = createTodoApp;

@@ -12,14 +12,10 @@
   function createTodoForm() {
     let form = document.createElement('form');
     let input = document.createElement('input');
-    let buttonWrapper = document.createElement('div');
     input.placeholder = 'Добавить дело';
     input.type = "text";
-    input.enterKeyHint = "done";
-
     input.classList.add('todo-input');
     form.append(input);
-    form.append(buttonWrapper);
     return {
       form,
       input,
@@ -115,8 +111,9 @@
       todoList.append(todoItem.item);
     }
 
-    todoForm.form.addEventListener('submit', function (e) {
-      e.preventDefault();
+    todoForm.input.addEventListener('keydown', function (e) {
+      if(e.key === 'Enter') {
+   e.preventDefault();
 
       if (!todoForm.input.value.trim()) {
         return;
@@ -137,7 +134,8 @@
       saveInLocaleStorage(keyList, listArray);
 
       todoForm.input.value = '';
-      todoForm.button.disabled = true;
+      }
+  
     })
   }
   window.createTodoApp = createTodoApp;

@@ -76,11 +76,11 @@ body {
 
 .done {
   margin-right: 14px;
-  background-image: url("./assest/done.png");
+  background-image: url("./done.png");
 }
 
 .delete {
-  background-image: url("./assest/delete.png");
+  background-image: url("./delete.png");
 }
 
 .done:hover,

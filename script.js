@@ -14,6 +14,8 @@
     let input = document.createElement('input');
     let buttonWrapper = document.createElement('div');
     input.placeholder = 'Добавить дело';
+    input.type = "text";
+    input.enterKeyHint = "done";
 
     input.classList.add('todo-input');
     form.append(input);
